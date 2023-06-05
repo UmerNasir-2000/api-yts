@@ -7,6 +7,6 @@ export class MovieController {
 
   @Get()
   fetchPaginatedMovies() {
-    return this.movieService.listPaginatedMovie();
+    return this.movieService.listPaginatedMovies({ page: 2, pageSize: 20 });
   }
 }
