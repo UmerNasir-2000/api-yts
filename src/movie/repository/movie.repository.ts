@@ -6,6 +6,8 @@ import PrismaService from 'src/database/prisma.service';
 export class MovieRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
+  // REFACTOR: Method overloading
+
   listMovies(
     take?: number,
     skip?: number,

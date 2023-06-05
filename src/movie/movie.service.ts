@@ -6,6 +6,7 @@ export class MovieService {
   constructor(private readonly movieRepository: MovieRepository) {}
 
   async listPaginatedMovies(query: { pageSize: number; page: number }) {
+    console.log('query', query);
     const total = await this.movieRepository.countMovies();
 
     const totalPages = Math.ceil(total / query.pageSize);

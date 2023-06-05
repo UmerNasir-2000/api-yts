@@ -1,4 +1,11 @@
-import { Controller, Get } from '@nestjs/common';
+import {
+  Controller,
+  DefaultValuePipe,
+  Get,
+  ParseIntPipe,
+  Query,
+} from '@nestjs/common';
+import MinNumberPipe from 'src/pipes/min.pipe';
 import { MovieService } from './movie.service';
 
 @Controller('movies')
@@ -6,7 +13,11 @@ export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 
   @Get()
-  fetchPaginatedMovies() {
-    return this.movieService.listPaginatedMovies({ page: 2, pageSize: 20 });
+  fetchPaginatedMovies(
+    @Query('page', new DefaultValuePipe(0), new MinNumberPipe(1), ParseIntPipe)
+    page: number,
+    @Query('pageSize', new DefaultValuePipe(0), ParseIntPipe) pageSize: number,
+  ) {
+    return this.movieService.listPaginatedMovies({ page, pageSize });
   }
 }
