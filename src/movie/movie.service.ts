@@ -8,23 +8,23 @@ import { MovieRepository } from './repository/movie.repository';
 export class MovieService {
   constructor(private readonly movieRepository: MovieRepository) {}
 
-  async listPaginatedMovies(query: {
-    pageSize: number;
-    page: number;
-  }): Promise<PaginationModel<Movie>> {
+  async listPaginatedMovies(
+    page: number,
+    offset: number,
+  ): Promise<PaginationModel<Movie>> {
     const total = await this.movieRepository.countMovies();
 
-    const pages = Math.ceil(total / query.pageSize);
+    const pages = Math.ceil(total / offset);
 
-    if (pages < query.page)
+    if (pages < page)
       throw new HttpException(
         { message: `Page number is greater than total pages` },
         HttpStatus.BAD_REQUEST,
       );
 
     const movies = await this.movieRepository.listMovies(
-      query.pageSize,
-      query.pageSize * (query.page - 1),
+      offset,
+      offset * (page - 1),
     );
 
     return PaginationModelFactory.create<Movie>(total, pages, movies);

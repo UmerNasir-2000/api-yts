@@ -18,13 +18,13 @@ export class MovieController {
     @Query('page', new DefaultValuePipe(0), new MinNumberPipe(1), ParseIntPipe)
     page: number,
     @Query(
-      'pageSize',
+      'offset',
       new DefaultValuePipe(0),
       new MaxNumberPipe(50),
       ParseIntPipe,
     )
-    pageSize: number,
+    offset: number,
   ) {
-    return this.movieService.listPaginatedMovies({ page, pageSize });
+    return this.movieService.listPaginatedMovies(page, offset);
   }
 }
