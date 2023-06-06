@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Movie } from '@prisma/client';
 import PaginationModel from 'src/utils/models/pagination.model';
+import PaginationModelFactory from './factory/pagination.factory';
 import { MovieRepository } from './repository/movie.repository';
 
 @Injectable()
@@ -26,7 +27,7 @@ export class MovieService {
       query.pageSize * (query.page - 1),
     );
 
-    return new PaginationModel<Movie>(total, pages, movies);
+    return PaginationModelFactory.create<Movie>(total, pages, movies);
   }
 }
 
