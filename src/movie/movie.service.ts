@@ -1,7 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Movie } from '@prisma/client';
 import PaginationModel from 'src/utils/models/pagination.model';
 import PaginationModelFactory from './factory/pagination.factory';
+import Pagination from './pagination';
 import { MovieRepository } from './repository/movie.repository';
 
 @Injectable()
@@ -14,17 +15,13 @@ export class MovieService {
   ): Promise<PaginationModel<Movie>> {
     const total = await this.movieRepository.countMovies();
 
-    const pages = Math.ceil(total / offset);
+    const pages = Pagination.getTotalPages(total, offset);
 
-    if (pages < page)
-      throw new HttpException(
-        { message: `Page number is greater than total pages` },
-        HttpStatus.BAD_REQUEST,
-      );
+    Pagination.isValidPage(page, pages);
 
     const movies = await this.movieRepository.listMovies(
       offset,
-      offset * (page - 1),
+      Pagination.getSkippedRecordsCount(page, offset),
     );
 
     return PaginationModelFactory.create<Movie>(total, pages, movies);
