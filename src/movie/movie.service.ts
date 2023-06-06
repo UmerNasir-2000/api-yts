@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Movie } from '@prisma/client';
+import { Movie, Prisma } from '@prisma/client';
 import PaginationModel from 'src/utils/models/pagination.model';
 import PaginationModelFactory from './factory/pagination.factory';
 import Pagination from './pagination';
@@ -9,11 +9,20 @@ import { MovieRepository } from './repository/movie.repository';
 export class MovieService {
   constructor(private readonly movieRepository: MovieRepository) {}
 
-  async listPaginatedMovies(
+  listTrendingMoviesPaginated(query: { page: number; offset: number }) {
+    const { page, offset } = query;
+
+    const whereCriteria: Prisma.MovieWhereInput = { rating: { gt: 8 } };
+
+    return this.listPaginatedMovies(page, offset, whereCriteria);
+  }
+
+  private async listPaginatedMovies(
     page: number,
     offset: number,
+    whereCriteria?: Prisma.MovieWhereInput,
   ): Promise<PaginationModel<Movie>> {
-    const total = await this.movieRepository.countMovies();
+    const total = await this.movieRepository.countMovies(whereCriteria);
 
     const pages = Pagination.getTotalPages(total, offset);
 
@@ -22,6 +31,7 @@ export class MovieService {
     const movies = await this.movieRepository.listMovies(
       offset,
       Pagination.getSkippedRecordsCount(page, offset),
+      whereCriteria,
     );
 
     return PaginationModelFactory.create<Movie>(total, pages, movies);

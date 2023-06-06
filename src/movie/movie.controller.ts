@@ -13,8 +13,8 @@ import { MovieService } from './movie.service';
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 
-  @Get()
-  fetchPaginatedMovies(
+  @Get('trending')
+  fetchTrendingPaginatedMovies(
     @Query('page', new DefaultValuePipe(0), new MinNumberPipe(1), ParseIntPipe)
     page: number,
     @Query(
@@ -25,6 +25,6 @@ export class MovieController {
     )
     offset: number,
   ) {
-    return this.movieService.listPaginatedMovies(page, offset);
+    return this.movieService.listTrendingMoviesPaginated({ page, offset });
   }
 }

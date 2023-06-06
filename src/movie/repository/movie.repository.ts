@@ -13,7 +13,12 @@ export class MovieRepository {
     skip?: number,
     where?: Prisma.MovieWhereInput,
   ): Promise<Movie[]> {
-    return this.prismaService.movie.findMany({ take, skip, where });
+    return this.prismaService.movie.findMany({
+      take,
+      skip,
+      where,
+      orderBy: { year: 'desc' },
+    });
   }
 
   countMovies(where?: Prisma.MovieWhereInput): Promise<number> {
