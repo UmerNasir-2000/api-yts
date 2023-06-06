@@ -43,7 +43,6 @@ export class MovieService {
     page: number,
     offset: number,
     whereCriteria?: Prisma.MovieWhereInput,
-    includeCriteria?: Prisma.MovieInclude,
   ): Promise<PaginationModel<Movie>> {
     const total = await this.movieRepository.countMovies(whereCriteria);
 
@@ -55,7 +54,6 @@ export class MovieService {
       offset,
       Pagination.getSkippedRecordsCount(page, offset),
       whereCriteria,
-      includeCriteria,
     );
 
     return PaginationModelFactory.create<Movie>(total, pages, movies);
