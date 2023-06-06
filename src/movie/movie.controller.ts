@@ -42,4 +42,19 @@ export class MovieController {
   ) {
     return this.movieService.listLatestMoviesPaginated({ page, offset });
   }
+
+  @Get('resolution')
+  fetchPaginatedMoviesByResolution(
+    @Query('page', new DefaultValuePipe(0), new MinNumberPipe(1), ParseIntPipe)
+    page: number,
+    @Query(
+      'offset',
+      new DefaultValuePipe(0),
+      new MaxNumberPipe(50),
+      ParseIntPipe,
+    )
+    offset: number,
+  ) {
+    return this.movieService.listMoviesByResolutionPaginated({ page, offset });
+  }
 }

@@ -12,11 +12,13 @@ export class MovieRepository {
     take?: number,
     skip?: number,
     where?: Prisma.MovieWhereInput,
+    include?: Prisma.MovieInclude,
   ): Promise<Movie[]> {
     return this.prismaService.movie.findMany({
       take,
       skip,
       where,
+      include,
       orderBy: { year: 'desc' },
     });
   }

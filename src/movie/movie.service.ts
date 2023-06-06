@@ -9,6 +9,18 @@ import { MovieRepository } from './repository/movie.repository';
 export class MovieService {
   constructor(private readonly movieRepository: MovieRepository) {}
 
+  // REFACTOR: Query parameters
+
+  listMoviesByResolutionPaginated(query: { page: number; offset: number }) {
+    const { page, offset } = query;
+
+    const whereCriteria: Prisma.MovieWhereInput = {
+      torrents: { some: { quality: '3D' } },
+    };
+
+    return this.listPaginatedMovies(page, offset, whereCriteria);
+  }
+
   listTrendingMoviesPaginated(query: { page: number; offset: number }) {
     const { page, offset } = query;
 
@@ -31,6 +43,7 @@ export class MovieService {
     page: number,
     offset: number,
     whereCriteria?: Prisma.MovieWhereInput,
+    includeCriteria?: Prisma.MovieInclude,
   ): Promise<PaginationModel<Movie>> {
     const total = await this.movieRepository.countMovies(whereCriteria);
 
@@ -42,6 +55,7 @@ export class MovieService {
       offset,
       Pagination.getSkippedRecordsCount(page, offset),
       whereCriteria,
+      includeCriteria,
     );
 
     return PaginationModelFactory.create<Movie>(total, pages, movies);

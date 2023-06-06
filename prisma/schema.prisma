@@ -8,19 +8,19 @@ datasource db {
 }
 
 model Movie {
-  id                 String   @id @default(uuid())
+  id                 String    @id @default(uuid())
   title              String
   slug               String
   language           String
   runtime            Int?
   rating             Float
   summary            String?   @db.Text
-  year               Int      @db.Year
+  year               Int       @db.Year
   genres             Json?     @db.Json
   youtubeTrailerCode String?   @map("yt_trailer_code")
-  imdb               String   @map("imdb_code")
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  imdb               String    @map("imdb_code")
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
   torrents           Torrent[]
   poster             Poster?
 
@@ -34,23 +34,23 @@ model Poster {
   medium     String
   large      String
   createdAt  DateTime @default(now())
-  movieId    String   @map("movie_id") @unique
+  movieId    String   @unique @map("movie_id")
   movie      Movie    @relation(fields: [movieId], references: [id])
 
   @@map("movie_poster")
 }
 
 model Torrent {
-  id         String   @id @default(uuid())
-  hash String   
-  quality      String
-  type     String
+  id        String   @id @default(uuid())
+  hash      String
+  quality   String
+  type      String
   seeds     Int
   peers     Int
   size      BigInt
-  createdAt  DateTime @default(now())
-  movieId    String   @map("movie_id")
-  movie      Movie    @relation(fields: [movieId], references: [id])
+  createdAt DateTime @default(now())
+  movieId   String   @map("movie_id")
+  movie     Movie    @relation(fields: [movieId], references: [id])
 
   @@map("movie_torrents")
 }
