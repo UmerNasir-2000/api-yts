@@ -17,6 +17,16 @@ export class MovieService {
     return this.listPaginatedMovies(page, offset, whereCriteria);
   }
 
+  listLatestMoviesPaginated(query: { page: number; offset: number }) {
+    const { page, offset } = query;
+
+    const whereCriteria: Prisma.MovieWhereInput = {
+      year: { in: [2023, 2022] },
+    };
+
+    return this.listPaginatedMovies(page, offset, whereCriteria);
+  }
+
   private async listPaginatedMovies(
     page: number,
     offset: number,
