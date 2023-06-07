@@ -17,6 +17,9 @@ export class MovieRepository {
       take,
       skip,
       where,
+      include: {
+        poster: { select: { medium: true, small: true, large: true } },
+      },
       orderBy: { year: 'desc' },
     });
   }
