@@ -2,7 +2,9 @@ import {
   Controller,
   DefaultValuePipe,
   Get,
+  Param,
   ParseIntPipe,
+  ParseUUIDPipe,
   Query,
 } from '@nestjs/common';
 import MaxNumberPipe from 'src/pipes/max.pipe';
@@ -79,5 +81,10 @@ export class MovieController {
       offset,
       filters,
     });
+  }
+
+  @Get(':movieId')
+  fetchMovie(@Param('movieId', ParseUUIDPipe) movieId: string) {
+    return this.movieService.getMovie({ id: movieId });
   }
 }

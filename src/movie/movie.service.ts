@@ -10,6 +10,10 @@ import { MovieRepository } from './repository/movie.repository';
 export class MovieService {
   constructor(private readonly movieRepository: MovieRepository) {}
 
+  getMovie({ id }: Prisma.MovieWhereUniqueInput) {
+    return this.movieRepository.getMovie({ id });
+  }
+
   listMoviesByFiltersPaginated(query: {
     page: number;
     offset: number;
