@@ -37,30 +37,30 @@ export class MovieController {
 
   @Get('latest')
   fetchLatestPaginatedMovies(
-    @Query('page', new DefaultValuePipe(0), new MinNumberPipe(1), ParseIntPipe)
-    page: number,
     @Query(
-      'offset',
-      new DefaultValuePipe(0),
-      new MaxNumberPipe(50),
-      ParseIntPipe,
+      new ValidationPipe({
+        transform: true,
+        transformOptions: { enableImplicitConversion: true },
+        forbidNonWhitelisted: true,
+      }),
     )
-    offset: number,
+    { page, offset }: PaginationRequestDto,
   ) {
     return this.movieService.listLatestMoviesPaginated({ page, offset });
   }
 
+  // TODO: Add resolution support
+
   @Get('resolution')
   fetchPaginatedMoviesByResolution(
-    @Query('page', new DefaultValuePipe(0), new MinNumberPipe(1), ParseIntPipe)
-    page: number,
     @Query(
-      'offset',
-      new DefaultValuePipe(0),
-      new MaxNumberPipe(50),
-      ParseIntPipe,
+      new ValidationPipe({
+        transform: true,
+        transformOptions: { enableImplicitConversion: true },
+        forbidNonWhitelisted: true,
+      }),
     )
-    offset: number,
+    { page, offset }: PaginationRequestDto,
   ) {
     return this.movieService.listMoviesByResolutionPaginated({ page, offset });
   }
