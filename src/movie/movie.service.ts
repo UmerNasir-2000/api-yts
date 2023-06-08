@@ -10,7 +10,7 @@ import { MovieRepository } from './repository/movie.repository';
 export class MovieService {
   constructor(private readonly movieRepository: MovieRepository) {}
 
-  getMovie({ id }: Prisma.MovieWhereUniqueInput) {
+  getMovie({ id }: Prisma.MovieWhereUniqueInput): Promise<Movie> {
     return this.movieRepository.getMovie({ id });
   }
 
@@ -18,7 +18,7 @@ export class MovieService {
     page: number;
     offset: number;
     filters: MovieFilters;
-  }) {
+  }): Promise<PaginationModel<Movie>> {
     const { page, offset, filters } = query;
 
     const whereCriteria: Prisma.MovieWhereInput = {
@@ -37,7 +37,10 @@ export class MovieService {
 
   // REFACTOR: Query parameters
 
-  listMoviesByResolutionPaginated(query: { page: number; offset: number }) {
+  listMoviesByResolutionPaginated(query: {
+    page: number;
+    offset: number;
+  }): Promise<PaginationModel<Movie>> {
     const { page, offset } = query;
 
     const whereCriteria: Prisma.MovieWhereInput = {
@@ -47,7 +50,10 @@ export class MovieService {
     return this.listPaginatedMovies(page, offset, whereCriteria);
   }
 
-  listTrendingMoviesPaginated(query: { page: number; offset: number }) {
+  listTrendingMoviesPaginated(query: {
+    page: number;
+    offset: number;
+  }): Promise<PaginationModel<Movie>> {
     const { page, offset } = query;
 
     const whereCriteria: Prisma.MovieWhereInput = { rating: { gt: 8 } };
@@ -55,7 +61,10 @@ export class MovieService {
     return this.listPaginatedMovies(page, offset, whereCriteria);
   }
 
-  listLatestMoviesPaginated(query: { page: number; offset: number }) {
+  listLatestMoviesPaginated(query: {
+    page: number;
+    offset: number;
+  }): Promise<PaginationModel<Movie>> {
     const { page, offset } = query;
 
     const whereCriteria: Prisma.MovieWhereInput = {
