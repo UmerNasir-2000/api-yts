@@ -9,3 +9,31 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model Cinematic {
+  id                 String        @id @default(uuid())
+  referenceId        Int           @unique @map("reference_id")
+  title              String
+  imdb               String        @unique
+  youtubeTrailerCode String        @unique @map("yt_trailer_code")
+  slug               String        @unique
+  releasedYear       Int           @map("released_year")
+  runtime            Int
+  description        String        @db.Text
+  poster             String        @db.Text
+  posterHash         String        @map("poster_hash") @db.Text
+  language           String
+  pictures           Json          @db.Json
+  covers             Json          @db.Json
+  genres             Json          @db.Json
+  type               CinematicType @default(MOVIE)
+  createdAt          DateTime      @default(now()) @map("created_at")
+  updatedAt          DateTime      @updatedAt @map("updated_at")
+
+  @@map("cinematics")
+}
+
+enum CinematicType {
+  MOVIE
+  TV_SHOW
+}
