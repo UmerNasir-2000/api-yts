@@ -1,6 +1,6 @@
 // import {getTitleDetailsByIMDBId} from 'movier';
 
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { Axios } from 'axios';
 
 const axios = new Axios({ baseURL: 'https://yts.mx/api/v2/' });
@@ -13,7 +13,7 @@ async function seed() {
   const response = JSON.parse(data);
 
   for (const movie of response.data.movies) {
-    const createdMovie = await prisma.cinematic.create({
+    const { id } = await prisma.cinematic.create({
       data: {
         referenceId: movie.id,
         title: movie.title,
@@ -32,7 +32,24 @@ async function seed() {
       },
     });
 
-    console.log('createdMovie', createdMovie);
+    const torrents: Prisma.TorrentCreateManyInput = movie.torrents.map(
+      (torrent: any) => ({
+        url: torrent.url,
+        hash: torrent.hash,
+        quality: torrent.quality,
+        seeds: torrent.seeds,
+        peers: torrent.peers,
+        size: torrent.size,
+        cinematicId: id,
+        isRepack: !!Number(torrent.is_repack),
+        type: torrent.type,
+        videoCodec: torrent.video_codec,
+        audioChannels: torrent.audio_channels,
+        bitDepth: Number(torrent.bit_depth),
+      }),
+    );
+
+    await prisma.torrent.createMany({ data: torrents });
   }
 
   console.log('Inserted successfully!!!');

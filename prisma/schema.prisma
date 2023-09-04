@@ -47,12 +47,9 @@ model Torrent {
   seeds            Int
   peers            Int
   size             String
-  sizeBytes        Int      @map("size_bytes")
-  dateUploaded     DateTime @map("date_uploaded")
-  dateUploadedUnix Int      @map("date_uploaded_unix")
 
-  movieId String    @map("movie_id")
-  movie   Cinematic @relation(fields: [movieId], references: [id])
+  cinematicId String    @map("movie_id")
+  cinematic   Cinematic @relation(fields: [cinematicId], references: [id])
 
   @@map("torrents")
 }
