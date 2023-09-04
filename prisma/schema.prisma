@@ -14,8 +14,8 @@ model Cinematic {
   id                 String        @id @default(uuid())
   referenceId        Int           @unique @map("reference_id")
   title              String
-  imdb               String        @unique
-  youtubeTrailerCode String        @unique @map("yt_trailer_code")
+  imdb               String
+  youtubeTrailerCode String        @map("yt_trailer_code")
   slug               String        @unique
   releasedYear       Int           @map("released_year")
   runtime            Int
@@ -29,8 +29,32 @@ model Cinematic {
   type               CinematicType @default(MOVIE)
   createdAt          DateTime      @default(now()) @map("created_at")
   updatedAt          DateTime      @updatedAt @map("updated_at")
+  torrents           Torrent[]
 
   @@map("cinematics")
+}
+
+model Torrent {
+  id               String   @id @default(uuid())
+  url              String
+  hash             String
+  quality          String
+  type             String
+  isRepack         Boolean  @map("is_repack")
+  videoCodec       String   @map("video_codec")
+  bitDepth         Int      @map("bit_depth")
+  audioChannels    String   @map("audio_channels")
+  seeds            Int
+  peers            Int
+  size             String
+  sizeBytes        Int      @map("size_bytes")
+  dateUploaded     DateTime @map("date_uploaded")
+  dateUploadedUnix Int      @map("date_uploaded_unix")
+
+  movieId String    @map("movie_id")
+  movie   Cinematic @relation(fields: [movieId], references: [id])
+
+  @@map("torrents")
 }
 
 enum CinematicType {
