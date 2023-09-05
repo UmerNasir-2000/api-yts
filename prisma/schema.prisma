@@ -27,7 +27,6 @@ model Cinematic {
   pictures           Json            @db.Json
   genres             Json            @db.Json
   director           Json            @db.Json
-  writes             Json            @db.Json
   keywords           Json            @db.Json
   type               CinematicType   @default(MOVIE)
   status             CinematicStatus @default(RELEASED)
