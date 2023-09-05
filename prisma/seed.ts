@@ -22,13 +22,14 @@ async function seed() {
         imdb: movie.imdb_code,
         language: movie.language,
         poster: movie.large_cover_image,
+        background: movie.background_image_original,
         slug: movie.slug,
         runtime: movie.runtime,
         posterHash: '',
-        youtubeTrailerCode: movie.yt_trailer_code,
-        pictures: [],
-        genres: [],
-        covers: [],
+        youtubeTrailerCode:
+          movie.yt_trailer_code.length !== 0 ? movie.yt_trailer_code : null,
+        pictures: [movie.medium_cover_image, movie.large_cover_image],
+        genres: movie.genres,
       },
     });
 
