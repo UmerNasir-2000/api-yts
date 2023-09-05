@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,8 +11,11 @@ model Cinematic {
   id                 String          @id @default(uuid())
   referenceId        Int             @unique @map("reference_id")
   title              String
+  tagline            String
+  budget             String
+  revenue            String
   imdb               String
-  youtubeTrailerCode String?          @map("yt_trailer_code")
+  youtubeTrailerCode String?         @map("yt_trailer_code")
   slug               String          @unique
   releasedYear       Int             @map("released_year")
   runtime            Int
@@ -26,11 +26,15 @@ model Cinematic {
   language           String
   pictures           Json            @db.Json
   genres             Json            @db.Json
+  director           Json            @db.Json
+  writes             Json            @db.Json
+  keywords           Json            @db.Json
   type               CinematicType   @default(MOVIE)
   status             CinematicStatus @default(RELEASED)
   createdAt          DateTime        @default(now()) @map("created_at")
   updatedAt          DateTime        @updatedAt @map("updated_at")
   torrents           Torrent[]
+  Cast               Cast[]
 
   @@map("cinematics")
 }
@@ -53,6 +57,30 @@ model Torrent {
   cinematic   Cinematic @relation(fields: [cinematicId], references: [id])
 
   @@map("torrents")
+}
+
+model Actor {
+  id                 String   @id @default(uuid())
+  imdb               String
+  profilePhoto       String   @map("profile_photo") @db.Text
+  birthDate          DateTime @map("birth_date") @db.Timestamp()
+  images             Json     @db.Json
+  bio                String   @db.Text()
+  popular_cinematics Json     @map("popular_cinematics") @db.Json
+  Cast               Cast[]
+
+  @@map("actors")
+}
+
+model Cast {
+  id             String    @id @default(uuid())
+  characterNames Json      @map("character_names") @db.Json
+  cinematicId    String    @map("cinematic_id")
+  cinematic      Cinematic @relation(fields: [cinematicId], references: [id])
+  actorId        String    @map("actor_id")
+  actor          Actor     @relation(fields: [actorId], references: [id])
+
+  @@map("cinematic_cast")
 }
 
 enum CinematicType {
