@@ -59,13 +59,14 @@ model Torrent {
 }
 
 model Actor {
-  id                 String   @id @default(uuid())
+  id                 String  @id @default(uuid())
   imdb               String
-  profilePhoto       String   @map("profile_photo") @db.Text
-  birthDate          DateTime @map("birth_date") @db.Timestamp()
-  images             Json     @db.Json
-  bio                String   @db.Text()
-  popular_cinematics Json     @map("popular_cinematics") @db.Json
+  name               String
+  profilePhoto       String? @map("profile_photo") @db.Text
+  birthDate          String? @map("birth_date")
+  images             Json?   @db.Json
+  bio                String  @db.Text()
+  popular_cinematics Json?   @map("popular_cinematics") @db.Json
   Cast               Cast[]
 
   @@map("actors")

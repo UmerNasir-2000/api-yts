@@ -1,7 +1,7 @@
 // import { Prisma, PrismaClient } from '@prisma/client';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { Axios } from 'axios';
-import { getTitleDetailsByIMDBId } from 'movier';
+import { getPersonDetailsByIMDBId, getTitleDetailsByIMDBId } from 'movier';
 
 const axios = new Axios({ baseURL: 'https://yts.mx/api/v2/' });
 
@@ -57,6 +57,30 @@ async function seed() {
     );
 
     await prisma.torrent.createMany({ data: torrents });
+
+    for (const cast of details?.casts.slice(0, 5) ?? []) {
+      let actor = await prisma.actor.findFirst({
+        where: { imdb: cast?.source?.sourceId ?? '' },
+      });
+
+      if (!actor) {
+        const actorDetails = await getPersonDetailsByIMDBId(
+          cast?.source?.sourceId ?? '',
+        );
+        actor = await prisma.actor.create({
+          data: {
+            bio: actorDetails.miniBio.at(0) ?? '',
+            imdb: cast?.source?.sourceId ?? '',
+            name: actorDetails.name,
+            birthDate: `${actorDetails.birthDate}`,
+            profilePhoto: actorDetails?.profileImage?.url ?? null,
+            images: actorDetails?.allImages.map((image) => image.url) ?? null,
+            popular_cinematics:
+              actorDetails.knownFor.map((rec) => rec.posterImage.url) ?? null,
+          },
+        });
+      }
+    }
   }
 
   // const response = await getTitleDetailsByIMDBId('tt4154796');
